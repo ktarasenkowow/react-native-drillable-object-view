@@ -58,6 +58,8 @@ const person = {
 
 ```marginLeft``` - The margin between nested objects. Adjusting this may make it more or less readable for you. Default is 8.
 
+```onLongPress``` - onLongPress by keyName ({keyName, value}: {keyName: string, value: any}) => void
+
 ```value``` - The array or object that you want to be rendered.
 
 ## Contributing

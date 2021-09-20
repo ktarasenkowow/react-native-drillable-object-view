@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import {
   StyleSheet,
+  View,
   Text,
   TouchableOpacity,
 } from 'react-native';
@@ -57,7 +58,7 @@ export default class DrillableObjectView extends PureComponent {
 
   toggleOpen = () => { this.setState({ isOpen: !this.state.isOpen }); };
   handleOnLongPress = () => {
-    const {onLongPress} = this.props;
+    const {onLongPress, keyName, value} = this.props;
     onLongPress?.({keyName, value});
   }
 
@@ -83,8 +84,8 @@ export default class DrillableObjectView extends PureComponent {
     const { keyName, value, marginLeft } = this.props;
     const emptyObjectText = _.isArray(value) ? '[]' : '{}';
     return (
-      <Text style={{ marginLeft }}>
-        <Text style={styles.keyStyle}>{keyName}:</Text>
+      <Text style={{ marginLeft }} >
+        <TouchableOpacity onLongPress={this.handleOnLongPress}><Text style={styles.keyStyle} >{keyName}:</Text></TouchableOpacity>
         <Text style={styles.valueStyle}> {emptyObjectText}</Text>
       </Text>
     );
@@ -93,9 +94,9 @@ export default class DrillableObjectView extends PureComponent {
   renderClosedObjectRow = () => {
     const { keyName, marginLeft } = this.props;
     return (
-      <TouchableOpacity style={{ marginLeft }} onPress={this.toggleOpen} onLongPress={this.handleOnLongPress}>
-        <Text style={styles.keyStyle}>{keyName}: +</Text>
-      </TouchableOpacity>
+      <View style={{ marginLeft }}  >
+        <Text style={styles.keyStyle} onPress={this.toggleOpen}>{keyName}: +</Text>
+      </View>
     );
   };
 
@@ -124,10 +125,10 @@ export default class DrillableObjectView extends PureComponent {
     ));
 
     return (
-      <TouchableOpacity style={{ marginLeft }} onPress={this.toggleOpen}>
-        <Text style={styles.keyStyle}>{keyName}: -</Text>
+      <View style={{ marginLeft }} >
+        <Text style={styles.keyStyle} onPress={this.toggleOpen}>{keyName}: -</Text>
         {subComponents}
-      </TouchableOpacity>
+      </View>
     );
   };
 
@@ -138,7 +139,7 @@ export default class DrillableObjectView extends PureComponent {
 
     return (
       <Text style={{ marginLeft }}>
-        <Text style={styles.keyStyle}>{keyName}:</Text>
+        <Text style={styles.keyStyle} onLongPress={this.handleOnLongPress}>{keyName}:</Text>
         <Text style={styles.valueStyle}> {this.rendervalueStyle(value)}</Text>
       </Text>
     );

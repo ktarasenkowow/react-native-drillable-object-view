@@ -37,6 +37,7 @@ export default class DrillableObjectView extends PureComponent {
   static propTypes = {
     autoExpandDepth: PropTypes.number,
     keyName: PropTypes.any,
+    onLongPress: PropTypes.func,
     marginLeft: PropTypes.number,
     value: PropTypes.any,
   };
@@ -55,6 +56,10 @@ export default class DrillableObjectView extends PureComponent {
   }
 
   toggleOpen = () => { this.setState({ isOpen: !this.state.isOpen }); };
+  handleOnLongPress = () => {
+    const {onLongPress} = this.props;
+    onLongPress?.({keyName, value});
+  }
 
   rendervalueStyle = (value) => {
     if (value === null) {
@@ -88,7 +93,7 @@ export default class DrillableObjectView extends PureComponent {
   renderClosedObjectRow = () => {
     const { keyName, marginLeft } = this.props;
     return (
-      <TouchableOpacity style={{ marginLeft }} onPress={this.toggleOpen}>
+      <TouchableOpacity style={{ marginLeft }} onPress={this.toggleOpen} onLongPress={this.handleOnLongPress}>
         <Text style={styles.keyStyle}>{keyName}: +</Text>
       </TouchableOpacity>
     );
@@ -97,7 +102,7 @@ export default class DrillableObjectView extends PureComponent {
   renderObjectRow = () => {
     const { isOpen } = this.state;
     const {
-      autoExpandDepth, keyName, value, marginLeft,
+      autoExpandDepth, keyName, value, marginLeft, onLongPress
     } = this.props;
 
     // if the value is an object, but is empty, we should just output it
@@ -113,6 +118,7 @@ export default class DrillableObjectView extends PureComponent {
         autoExpandDepth={autoExpandDepthRemaining}
         keyName={subkeyName}
         value={subValue}
+        onLongPress={onLongPress}
         key={`${keyName}:${subkeyName}`}
       />
     ));

@@ -2,66 +2,50 @@
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/newtonry/react-native-drillable-object-view.svg)](https://greenkeeper.io/)
 
+![](https://github.com/ktarasenkowow/react-native-drillable-object-view/example/data.png)
+![](https://github.com/ktarasenkowow/react-native-drillable-object-view/example/copied.png)
 This component takes in an array or object and renders a view that you can drill down into, similar to what you can do in a Chrome debugger (see gif below).
 
-![Example gif](https://i.imgur.com/XRoLP27.gif)
-
-
 ## Installation
-```npm install react-native-drillable-object-view``` or ```yarn add react-native-drillable-object-view```
+```npm install ktarasenkowow/react-native-drillable-object-view#v2.0.0``` or ```yarn add ktarasenkowow/react-native-drillable-object-view#v2.0.0```
 
 
 ## How to use
+
+### Example use with @react-native-clipboard/clipboard
 ```js
 import DrillableObjectView from 'react-native-drillable-object-view';
+import Clipboard from '@react-native-clipboard/clipboard';
+import { Alert } from 'react-native';
 
 ...
 
 // example object
-const person = {
-  name: 'Homer',
-  age: 39,
-  enjoysBeer: true,
-  children: [
-    {
-      name: 'Bart',
-      age: 10,
-      enjoysBeer: null,
-      children: [],
-    },
-    {
-      name: 'Lisa',
-      age: 10,
-      enjoysBeer: null,
-    },
-    {
-      name: 'Maggie',
-      age: 1.2,
-      enjoysBeer: null,
-    },
-  ],
+const FAKE_DATA = {
+ a: {b: {c: {d: "hello world"}, f: {h:false} }}
 };
 
+handleSaveValue = ({ infoText }) => {
+    Alert.alert('Copied', infoText);
+    Clipboard.setString(infoText);
+  };
+...
 <DrillableObjectView
-    autoExpandDepth={1}
-    keyName={'parentKey'}
+    keyName={'Data'}
     marginLeft={10}
-    value={person}
+    value={FAKE_DATA}
+    onLongPressKey={this.onSaveValue}
+    onLongPressValue={this.onSaveValue}
 />
 ```
-
 ### Props
 
-```autoExpandDepth``` - How many levels of the object you want to be open when it's initially rendered. Default is 0, which means only the parent can be seen at the start.
+```onLongPressKey``` - onLongPress by keyName. Callback param: ```({keyName: string, value: any, paths: string[], infoText: string})```
+
+```onLongPressValue``` - onLongPress by value. Callback param: ```({keyName: string, value: any, paths: string[], infoText: string})```
 
 ```keyName``` - The key name that will be displayed. Only the initial keyName is relevant to you. Default is 'parent'.
 
 ```marginLeft``` - The margin between nested objects. Adjusting this may make it more or less readable for you. Default is 8.
 
-```onLongPress``` - onLongPress by keyName ({keyName, value}: {keyName: string, value: any}) => void
-
 ```value``` - The array or object that you want to be rendered.
-
-## Contributing
-This is pretty basic at the moment, but if you have new features, requests, or would like to contribute feel free to open a PR and ping me!
-I've created a pre-push hook that runs ```npm test``` and ```npm run lint``` prior to pushing. Please run these.

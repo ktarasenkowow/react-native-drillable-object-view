@@ -34,11 +34,17 @@ const styles = StyleSheet.create({
   },
 });
 
+let paths = [];
+
+const genText = ({keyName, value}) => `[FULL_PATH]: ${paths.join(
+  '.',
+)}.${keyName}\n[KEY]: ${keyName}\n[VALUE]: ${JSON.stringify(value)}`
+
 export default class DrillableObjectView extends PureComponent {
   static propTypes = {
-    autoExpandDepth: PropTypes.number,
     keyName: PropTypes.any,
-    onLongPress: PropTypes.func,
+    onLongPressKey: PropTypes.func,
+    onLongPressValue: PropTypes.func,
     marginLeft: PropTypes.number,
     value: PropTypes.any,
   };
@@ -49,17 +55,33 @@ export default class DrillableObjectView extends PureComponent {
     marginLeft: 8,
   };
 
+  
   constructor(props) {
     super(props);
-    const { autoExpandDepth } = props;
-    // If there are still more layers to be auto-expanded, we should default to isOpen
-    this.state = { isOpen: autoExpandDepth > 0 };
+    this.state = { isOpen: false };
+    
   }
 
-  toggleOpen = () => { this.setState({ isOpen: !this.state.isOpen }); };
-  handleOnLongPress = () => {
-    const {onLongPress, keyName, value} = this.props;
-    onLongPress?.({keyName, value});
+  toggleOpen = () => { 
+    const {keyName, autoExpandDepth} = this.props;
+    const innerLevel = autoExpandDepth*-1;
+    if(innerLevel>0.5){
+      if(innerLevel>paths.length){
+      }else{
+        paths.length = innerLevel-1;
+      }
+      paths.push(keyName);
+     
+    }
+    this.setState({ isOpen: !this.state.isOpen }); };
+ 
+  handlePressKey= () =>{
+    const {onLongPressKey, keyName, value} = this.props;
+    onLongPressKey?.({keyName, value, paths, infoText: genText({keyName, value})});
+  }
+  handlePressValue= () =>{
+    const { onLongPressValue, keyName, value} = this.props;
+    onLongPressValue?.({keyName, value, paths, infoText: genText({keyName, value})});
   }
 
   rendervalueStyle = (value) => {
@@ -99,13 +121,13 @@ export default class DrillableObjectView extends PureComponent {
       </View>
     );
   };
+  
 
   renderObjectRow = () => {
     const { isOpen } = this.state;
     const {
-      autoExpandDepth, keyName, value, marginLeft, onLongPress
+      autoExpandDepth, keyName, value, marginLeft
     } = this.props;
-
     // if the value is an object, but is empty, we should just output it
     if (_.isObject(value) && _.isEmpty(value)) return this.renderEmptyObjectRow();
 
@@ -119,14 +141,14 @@ export default class DrillableObjectView extends PureComponent {
         autoExpandDepth={autoExpandDepthRemaining}
         keyName={subkeyName}
         value={subValue}
-        onLongPress={onLongPress}
+        onLongPress={this.handlePressKey}
         key={`${keyName}:${subkeyName}`}
       />
     ));
 
     return (
       <View style={{ marginLeft }} >
-        <Text style={styles.keyStyle} onPress={this.toggleOpen}>{keyName}: -</Text>
+        <Text style={styles.keyStyle} onPress={this.toggleOpen} >{keyName}: -</Text>
         {subComponents}
       </View>
     );
@@ -139,8 +161,8 @@ export default class DrillableObjectView extends PureComponent {
 
     return (
       <Text style={{ marginLeft }}>
-        <Text style={styles.keyStyle} onLongPress={this.handleOnLongPress}>{keyName}:</Text>
-        <Text style={styles.valueStyle}> {this.rendervalueStyle(value)}</Text>
+        <Text style={styles.keyStyle} onLongPress={this.handlePressKey}>{keyName}:</Text>
+        <Text style={styles.valueStyle} onLongPress={this.handlePressValue}> {this.rendervalueStyle(value)}</Text>
       </Text>
     );
   }

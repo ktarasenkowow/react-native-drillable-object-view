@@ -1,3 +1,7 @@
+## Installation
+```npm install ktarasenkowow/react-native-drillable-object-view#v2.0.0``` or ```yarn add ktarasenkowow/react-native-drillable-object-view#v2.0.0```
+
+
 # react-native-drillable-object-view [![Build Status](https://travis-ci.org/newtonry/react-native-drillable-object-view.svg?branch=master)](https://travis-ci.org/newtonry/react-native-drillable-object-view)
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/newtonry/react-native-drillable-object-view.svg)](https://greenkeeper.io/)
@@ -5,10 +9,9 @@
 ![](https://github.com/ktarasenkowow/react-native-drillable-object-view/blob/master/example/data.png)
 
 ![](https://github.com/ktarasenkowow/react-native-drillable-object-view/blob/master/example/copied.png)
+
 This component takes in an array or object and renders a view that you can drill down into, similar to what you can do in a Chrome debugger (see gif below).
 
-## Installation
-```npm install ktarasenkowow/react-native-drillable-object-view#v2.0.0``` or ```yarn add ktarasenkowow/react-native-drillable-object-view#v2.0.0```
 
 
 ## How to use

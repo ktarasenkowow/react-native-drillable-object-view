@@ -38,8 +38,8 @@ handleSaveValue = ({ infoText }) => {
     keyName={'Data'}
     marginLeft={10}
     value={FAKE_DATA}
-    onLongPressKey={this.onSaveValue}
-    onLongPressValue={this.onSaveValue}
+    onLongPressKey={this.handleSaveValue}
+    onLongPressValue={this.handleSaveValue}
 />
 ```
 ### Props
